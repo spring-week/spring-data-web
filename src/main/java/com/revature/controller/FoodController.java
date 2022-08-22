@@ -37,7 +37,7 @@ public class FoodController {
 	
 	// POST request to add ... http:localhost:5000/food/add
 	@PostMapping("/add") // this method takes in a Food object in JSON
-	public int addFood(@RequestBody Food food) { // https://stackoverflow.com/questions/39343340/spring-why-should-i-still-use-requestbody-when-my-class-is-already-annotated
+	public Food addFood(@RequestBody Food food) { // https://stackoverflow.com/questions/39343340/spring-why-should-i-still-use-requestbody-when-my-class-is-already-annotated
 		
 		// when we take in the Food obj in the form of JSON at that endpoint in the Request Body
 		// Jackson Databind (object mapper) will transform the JSON to a Java Object

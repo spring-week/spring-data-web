@@ -3,6 +3,8 @@ package com.revature.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,45 +15,47 @@ import com.revature.repository.FoodRepository;
 
 @Service // Component -> Repository, Service, Controller (sterotype annotations)
 public class FoodService {
-	
-	// Since we've autowired an interface that we've assigned the @Repository annotation
-	// Spring knows to inject an Implementation class which the service layer can use
-	@Autowired
+
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 	private FoodRepository foodRepo;
-	
-	
-	// methods to be called by the web/controller layer:
-	
+
+	@Autowired
+	public FoodService(FoodRepository foodRepo) {
+		this.foodRepo = foodRepo;
+	}
+
 	// findAllFoods() returns a list of food items in the DB
 	public List<Food> findAllFoods() {
-		
+
+		log.info("retrieveing all foods from the DB");
 		// we call the findAll() method from the dao (FoodRepository)
 		return foodRepo.findAll();
 	}
-	
-	// add a food, return the PK generated
-	public int addFood(Food food) {
-		
+
+	// add a food, return the food object with generated PK
+	public Food addFood(Food food) {
+
 		Food savedFood = foodRepo.save(food);
-		return savedFood.getId();
-	}
-	
-	// delete by id
-	public void deleteById(int id) {
-		
-		// the CrudRepository's deleteById() method has void return type
-		foodRepo.deleteById(id);
+		log.info("adding {} to the database", food.getDishName());
+		return savedFood;
 	}
 	
 	public Food findFoodByDishName(String dishName) {
-		
-		// return the repository's impl class's method...
+
 		Optional<Food> possibleFood = foodRepo.findByDishNameIgnoreCase(dishName);
-		
-		// IF the optional returns a food record, return the value of the food object
-		// otherwise return null;
-		return possibleFood.isPresent() ? possibleFood.get() : null;
-		
+
+		if (possibleFood.isPresent()) {
+			log.info("retrevied {}", dishName);
+			return possibleFood.get();
+		} else {
+			log.warn("Could not retrieve {}", dishName);
+			return null;
+		}
 	}
 
+	public void deleteById(int id) {
+		log.info("deleting food with id {}", id);
+		// the CrudRepository's deleteById() method has void return type
+		foodRepo.deleteById(id);
+	}
 }

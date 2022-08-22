@@ -33,3 +33,8 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+// This replaces the <project-name>-<version>-<snapshot>.jar with the just <project-name>.jar
+bootJar {
+   archiveName = "$baseName.$extension"
+}

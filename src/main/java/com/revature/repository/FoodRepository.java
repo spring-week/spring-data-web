@@ -57,16 +57,3 @@ public interface FoodRepository extends JpaRepository<Food, Integer> { // <Objec
 	 * 
 	 */
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

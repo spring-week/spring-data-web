@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.revature.data.FoodRepository;
 import com.revature.model.Food;
+import com.revature.repository.FoodRepository;
 
 // This class DEPENDS on the repository layer
 

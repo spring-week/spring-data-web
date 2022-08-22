@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.revature.exceptions.FoodNotFoundException;
 import com.revature.model.Food;
 import com.revature.repository.FoodRepository;
 
@@ -27,9 +28,21 @@ public class FoodService {
 	// findAllFoods() returns a list of food items in the DB
 	public List<Food> findAllFoods() {
 
-		log.info("retrieveing all foods from the DB");
+		log.info("retrieving all foods from the DB");
 		// we call the findAll() method from the dao (FoodRepository)
 		return foodRepo.findAll();
+	}
+
+	public Food findById(int id) {
+		log.info("retreiving food with id {}", id);
+
+		if (id <= 0) {
+			log.warn("Id cannot be <= 0. Id passed was: {}", id);
+			return null;
+		} else {
+			return foodRepo.findById(id)
+					.orElseThrow(() -> new FoodNotFoundException("No food found with id " + id));
+		}
 	}
 
 	// add a food, return the food object with generated PK
@@ -39,7 +52,7 @@ public class FoodService {
 		log.info("adding {} to the database", food.getDishName());
 		return savedFood;
 	}
-	
+
 	public Food findFoodByDishName(String dishName) {
 
 		Optional<Food> possibleFood = foodRepo.findByDishNameIgnoreCase(dishName);
